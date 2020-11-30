@@ -1,0 +1,45 @@
+{% extends "base.html" %} 
+{% block content %}
+<style>
+  /* mouse over link */
+  a:hover {
+    color: #eed202;
+  }
+  .fadeIn.second{
+    margin-top:20px;
+  }
+  .banner_part{
+    height:100%;
+  }
+</style>
+<!-- login CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+  <!-- banner part start-->
+  <section class="banner_part" style="background-color: #56baed;">
+    
+    <div class="container">
+        <div class="wrapper fadeInDown">
+          <div id="formContent">
+            <!-- Tabs Titles -->
+            <h2 class="active"> Log In </h2>
+            <h2 class="inactive underlineHover"><a href="/register">Sign Up</a></h2>
+          
+            <!-- Login Form -->
+            <form method="POST">
+                <br>
+                <input type="text" name="email" class="fadeIn first" placeholder="E-mail" maxlength="150" minlength="6" autocomplete="off" >
+                <input type="text" name="passwd" class="fadeIn third" placeholder="password" maxlength="150" minlength="6" style="-webkit-text-security: DISC;" autocomplete="off" >
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+          
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+              <a class="underlineHover" href="/register">Not a member? Sign up NOW!</a>
+            </div>
+          </div>
+        </div>
+    
+    </div>
+    </div>
+  </section>
+  {% endblock %}
