@@ -4,7 +4,7 @@ import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '12rf1124g341h13'
-db = pymysql.connect(host='localhost', port=33061, user='root',passwd='hh237237!!',db='nextflexdb',charset='utf8')
+db = pymysql.connect(host='localhost', port=33061, user='root',passwd='***',db='nextflexdb',charset='utf8')
 cursor=db.cursor()
 
  
