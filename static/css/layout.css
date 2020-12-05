@@ -5120,3 +5120,20 @@ label {
   margin-right: 5px;
 }
 /*# sourceMappingURL=main.0cf8b554.map*/
+.star-rating{
+  float: right;
+  margin:13px 0 0 0;
+}
+.star-rating,.star-rating span {
+  display:inline-block;
+  overflow:hidden; 
+  width:100px;
+  height: 17px;
+  background:url(../images/star.png) no-repeat;
+  background-size:100px;
+}
+.star-rating span{
+  background-position:left bottom; 
+  line-height:0; 
+  vertical-align:top; 
+}

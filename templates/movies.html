@@ -1,0 +1,96 @@
+{% extends "base.html" %} 
+{% block content %}
+<style>
+  h3{
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  a{
+    cursor: pointer;
+  }
+  a:hover{
+    color:rebeccapurple;
+  }
+  .row{
+    vertical-align: center;
+  }/*
+  @media (min-width: 568px) {
+    .container {
+      font-size:14px;
+      width: 750px;
+    }
+  }
+  @media (min-width: 768px) {
+    .container {
+      font-size:16px;
+      width: 950px;
+    }
+  }
+  @media (min-width: 992px) {
+    .container {
+      font-size:18px;
+      width: 1170px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .container {
+      font-size:18px;
+      width: 1370px;
+    }
+  }*/
+  .btn-success{
+    padding: 2.5px 10px 2.5px 10px;
+  }
+  h1{
+    text-align: center;
+    font:30px;
+  }
+  .search_key{
+    text-align: right;
+  }
+  .row{
+    margin-left:5%;
+  }
+  a{
+    display: inline-block;
+  }
+  p{
+    text-align: justify;
+  }
+</style>
+<div class="section-container">
+    {% if error %}
+      <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <div class="container" style="margin-bottom:200px">
+      <h1 class="movie_title" style="margin-top:70px;">Movie List</h1>
+      <form method="GET" class="search_key">
+        <select name="search_type">
+          <option value="movie" selected="selected">Movie name</option>
+          <option value="actor">Actor name</option>
+          <option value="movie_type">Movie type</option>
+        </select>
+        <input type="text" name="keywords" placeholder="Search">
+        <input type="submit" value="검색" class="btn btn-success">
+      </form>
+      <br>
+      {% if movies == None %}
+        <h1 style="margin-top:200px;color:black"> The movie you are looking for<br>does not exist.</h1>
+      {% else %}
+        {% for movie in movies %}
+          <div class="row" style="margin-top:30px;">
+            <div class="col-xs-12 col-md-11">
+              <img class="img-responsive reveal-content" src="{{ url_for('static', filename=movie[6]) }}" alt="" data-action="zoom" style="width:150px; display: inline; float: left; margin-right: 30px;">
+              <a onclick="return confirm('Would you like to put {{movie[1]}} in your movie queue?');" href="/movie_queue/{{movie[0]}}"><h3 class="text-left">{{ loop.index }}. {{movie[1]}}</h3></a>
+              <div class='star-rating'> 
+                  <span style ="width:{{movie[5]*20}}%"></span>
+              </div>
+              <p>{{movie[7]}}</p>
+           </div>
+          </div>
+        {% endfor %}   
+      {% endif %}     
+    </div>
+  </div>
+
+  {% endblock %}

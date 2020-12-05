@@ -1,0 +1,51 @@
+{% extends "base.html" %} 
+{% block content %}
+<style>
+  .section-container{
+    color:black;
+  }
+  h1{
+    text-align: center;
+    padding: 20px;
+    margin-bottom:30px;
+    border:3px #1763e9 solid;
+  }
+  .cname{
+    padding:20px;
+    font-size: 30px;
+  }
+  .strin{
+    font-weight: bold;
+    margin-right: 30px;
+  }
+  .account_container{
+    margin-top:20px;
+    border:1px gray solid;
+    font-size:22px;
+    padding:20px;
+  }
+</style>
+<!-- Add your site or app content here -->
+<div class="section-container" style="margin-top:100px;">
+  <div class="container" style="margin-bottom:200px">
+    <h1> My page </h1>
+    <div class="cname"><span class="strin">HELLO </span><span>{{user_info[2]}},</span> <span>{{user_info[3]}}</span></div>
+    <div class="cname">
+      <div class="strin">ACCOUNT_INFO </div>
+      {% if account_info == () %}
+      <div>Empty</div>
+      {% else %}
+        {% for account in account_info %}
+          <div class="account_container">
+            <div>AccountNum:{{account[2]}}</div>
+            <div>AccountType:{{account[3]}}</div>
+            <div>AccountCreatedDate:{{account[5]}}</div>
+            <div>PlanExpiredDate:{{account[6]}}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
