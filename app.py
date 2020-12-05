@@ -4,7 +4,7 @@ import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '12rf1124g341h13'
-db = pymysql.connect(host='localhost', port=33061, user='root',passwd='***',db='nextflexdb',charset='utf8')
+db = pymysql.connect(host='localhost', port=33061, user='root',passwd='hh237237!!',db='nextflexdb',charset='utf8')
 cursor=db.cursor()
 
  
@@ -12,6 +12,18 @@ cursor=db.cursor()
 @app.route('/index')
 def index():
   return render_template('index.html')
+
+@app.route('/project')
+def project():
+  sql = "SELECT * FROM movie"
+  rows_count = cursor.execute(sql)
+  if rows_count > 0 :
+      movie_info = cursor.fetchall()
+  return render_template('project.html',movies=movie_info)
+
+@app.route('/components')
+def components():
+  return render_template('components.html')
 
 @app.route('/logout') 
 def logout(): 
@@ -35,7 +47,7 @@ def about():
             print('User does not exist')
             return redirect(request.url)
         return redirect('/')
-    return render_template('login.html', form='123')
+    return render_template('login.html')
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -57,5 +69,5 @@ def register():
         cursor.execute(sql,(EmailAddress,Passwd,FirstName,LastName))
         db.commit()
         db.close()
-        return redirect(request.url)
+        return redirect('login')
     return render_template('signup.html')

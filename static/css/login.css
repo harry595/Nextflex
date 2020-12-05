@@ -2,9 +2,6 @@
 
 /* BASIC */
 
-html {
-  background-color: #56baed;
-}
 
 body {
   font-family: "Poppins", sans-serif;
@@ -39,7 +36,7 @@ h2 {
   justify-content: center;
   width: 100%;
   min-height: 100%;
-  padding-top:200px;
+  padding-top:250px;
 }
 
 #formContent {
@@ -294,4 +291,10 @@ input[type=password]:placeholder {
 
 * {
   box-sizing: border-box;
+}
+
+.banner_part{
+  height:130%;
+  background-image: url(../images/login.png);
+  margin-bottom:-60px;
 }
