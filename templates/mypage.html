@@ -39,15 +39,11 @@
     margin:20px 0 20px 0;
     font-weight: bold;
     font-size: 16px;
-    background-color:rgb(231, 237, 253);
-  }
-  #create_acc:hover{
-    background-color: #5cb85c;
   }
   .queue_container,.order_container{
     border:3px black solid;
     margin:20px 0 20px 0;
-    height: 300px;
+    height: 400px;
     overflow: auto;
   }
   .con_body{
@@ -74,6 +70,9 @@
     display:table;
     height: 100px;
     width: 100%;
+  }
+  .queues:hover{
+    background-color: rgb(197, 213, 255);
   }
   .queue_lists{
     display: block;
@@ -116,6 +115,7 @@
         {% endfor %}
       {% endif %}
       <a href="#" type="button" class="btn btn-success" id="create_acc">+ Create Account</a>
+      
       <div class="strin">Movie_Queue </div>
       <div class="queue_container">
         {% if queue_info == () %}
@@ -129,15 +129,31 @@
               <span class='star-rating'> 
                 <span style ="width:{{queue[8]*20}}%"></span>
               </span>
-              <a href="#" class="btn btn-success make_order">make orders</a>
+              <a href="/makeorders?qid={{queue[0]}}" class="btn btn-success make_order">make orders</a>
             </p>
           </div>
           {% endfor %}
         {% endif %}
       </div>
+
       <div class="strin">Ordered_Movie </div>
       <div class="order_container">
-        {{order_info}}
+        {% if order_info == () %}
+          <p class="emptythings">Your Order is empty</p>
+        {% else %}
+          {% for orde in order_info %}
+          <div class="queues">
+            <img src="{{ url_for('static', filename=orde[12]) }}" class="queue_img" alt="" >
+            <p class="queue_lists">{{ loop.index }}. {{orde[7]}} 
+              <span class="genre">{{orde[8]}}</span> 
+              <span class='star-rating'> 
+                <span style ="width:{{orde[11]*20}}%"></span>
+              </span>
+              <a href="/viewmovie?oid={{orde[0]}}" class="btn btn-danger make_order">Watch Movie</a>
+            </p>
+          </div>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   </div>

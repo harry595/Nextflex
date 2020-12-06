@@ -20,6 +20,40 @@ def movie_queue(movie_id):
     cursor.execute(sql,(movie_id,user_id))
     db.commit()
     return redirect('/movies')
+    
+@app.route('/viewmovie')
+def viewmovie():
+  user_id=session['user']
+  orderid=request.args.get('oid')
+  sql = "SELECT * FROM Orders WHERE OrderID=%s"
+  cursor.execute(sql,orderid)
+  ordercheck=cursor.fetchone()
+  #사용자 order match 검증
+  if(ordercheck[3]!=user_id):
+    return redirect('/mypage')
+
+  sql2 = "SELECT * FROM movie WHERE MovieID=%s"
+  cursor.execute(sql2,ordercheck[2])
+  movie_info = cursor.fetchone()
+  
+  return render_template('viewmovie.html',movie_info=movie_info)
+
+@app.route('/makeorders')
+def makeorders():
+  qid=request.args.get('qid')
+  user_id=session['user']
+  sql = "SELECT * FROM moviequeue WHERE QueueId=%s"
+  cursor.execute(sql,qid)
+  resultflag=cursor.fetchone()
+  if resultflag[2]==user_id:
+    sql2 = "INSERT INTO orders(MovieID,CustomerID) SELECT MovieID,CustomerID FROM moviequeue WHERE QueueId=%s"
+    cursor.execute(sql2,qid)
+    sql3 = "DELETE FROM moviequeue WHERE QueueId=%s"
+    cursor.execute(sql3,qid)
+    db.commit()
+  
+  return redirect('/mypage')
+
 
 @app.route('/movies')
 def movies():
@@ -84,10 +118,11 @@ def mypage():
     cursor.execute(sql3,user_id)
     queue_info = cursor.fetchall()
 
-    sql4 = "SELECT * FROM Orders WHERE CustomerID=%s AND holding=1 "
+    sql4="SELECT * FROM Orders as mq JOIN movie as m on mq.MovieID= m.MovieID WHERE CustomerID=%s and holding=1;"
     cursor.execute(sql4,user_id)
     order_info = cursor.fetchall()
-    return render_template('mypage.html',user_info=user_info,account_info=account_info,queue_info=queue_info)
+    
+    return render_template('mypage.html',user_info=user_info,account_info=account_info,queue_info=queue_info,order_info=order_info)
 
 @app.route('/logout') 
 def logout(): 
