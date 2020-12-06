@@ -79,7 +79,15 @@ def mypage():
     sql2 = "SELECT * FROM account where CustomerID=%s"
     cursor.execute(sql2,user_id)
     account_info = cursor.fetchall()
-    return render_template('mypage.html',user_info=user_info,account_info=account_info)
+
+    sql3 = "SELECT * FROM moviequeue as mq JOIN movie as m on mq.MovieID=m.MovieID WHERE CustomerID=%s; "
+    cursor.execute(sql3,user_id)
+    queue_info = cursor.fetchall()
+
+    sql4 = "SELECT * FROM Orders WHERE CustomerID=%s AND holding=1 "
+    cursor.execute(sql4,user_id)
+    order_info = cursor.fetchall()
+    return render_template('mypage.html',user_info=user_info,account_info=account_info,queue_info=queue_info)
 
 @app.route('/logout') 
 def logout(): 

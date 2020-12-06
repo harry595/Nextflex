@@ -1,6 +1,9 @@
 {% extends "base.html" %} 
 {% block content %}
 <style>
+  body{
+    background-image: url(../static/images/login.png);
+  }
   .section-container{
     color:black;
   }
@@ -11,12 +14,20 @@
     border:3px #1763e9 solid;
   }
   .cname{
+    text-align: center;
     padding:20px;
     font-size: 30px;
   }
   .strin{
+    text-align: center;
+    margin-top:50px;
     font-weight: bold;
-    margin-right: 30px;
+  }
+  .strin_right{
+    text-align: center;
+    margin-top:50px;
+    margin-left:100px;
+    font-weight: bold;
   }
   .account_container{
     margin-top:20px;
@@ -24,16 +35,76 @@
     font-size:22px;
     padding:20px;
   }
+  #create_acc{
+    margin:20px 0 20px 0;
+    font-weight: bold;
+    font-size: 16px;
+    background-color:rgb(231, 237, 253);
+  }
+  #create_acc:hover{
+    background-color: #5cb85c;
+  }
+  .queue_container,.order_container{
+    border:3px black solid;
+    margin:20px 0 20px 0;
+    height: 300px;
+    overflow: auto;
+  }
+  .con_body{
+    background-color: white;
+    border:3px #1763e9 solid;
+
+  }
+  .mypage{
+    background-color: white;
+  }
+  .emptythings{
+    margin-top:115px;
+    text-align: center;
+  }
+  .queue_img{
+    height:90px;
+    width:90px; 
+    display: inline; 
+    float: left; 
+    padding:3px;
+    margin-right: 30px;
+  }
+  .queues{
+    display:table;
+    height: 100px;
+    width: 100%;
+  }
+  .queue_lists{
+    display: block;
+    text-align: start;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+  }
+  .genre{
+    font-size: 15px;
+    font-weight: bold;
+    color:#1763e9;
+  }
+  .make_order{
+    float:right;
+    margin-right: 20px;
+  }
+  .star-rating {
+    float: inherit;
+    margin: 0 0 -2px 0;
+  }
 </style>
 <!-- Add your site or app content here -->
 <div class="section-container" style="margin-top:100px;">
   <div class="container" style="margin-bottom:200px">
-    <h1> My page </h1>
-    <div class="cname"><span class="strin">HELLO </span><span>{{user_info[2]}},</span> <span>{{user_info[3]}}</span></div>
+    <h1 class="mypage"> My page </h1>
+    <div class="con_body">
+    <div class="cname"><span class="strin">Hello </span>{{user_info[2]}},{{user_info[3]}} ( <i class="fa fa-envelope"></i> : {{user_info[4]}} )</div>
     <div class="cname">
-      <div class="strin">ACCOUNT_INFO </div>
+      <div class="strin">Account_Info </div>
       {% if account_info == () %}
-      <div>Empty</div>
+      <div style="margin-top:30px;">Empty, Create Your Own Account!</div>
       {% else %}
         {% for account in account_info %}
           <div class="account_container">
@@ -44,8 +115,33 @@
           </div>
         {% endfor %}
       {% endif %}
+      <a href="#" type="button" class="btn btn-success" id="create_acc">+ Create Account</a>
+      <div class="strin">Movie_Queue </div>
+      <div class="queue_container">
+        {% if queue_info == () %}
+          <p class="emptythings">Your Movie Queue is empty</p>
+        {% else %}
+          {% for queue in queue_info %}
+          <div class="queues">
+            <img src="{{ url_for('static', filename=queue[9]) }}" class="queue_img" alt="" >
+            <p class="queue_lists">{{ loop.index }}. {{queue[4]}} 
+              <span class="genre">{{queue[5]}}</span> 
+              <span class='star-rating'> 
+                <span style ="width:{{queue[8]*20}}%"></span>
+              </span>
+              <a href="#" class="btn btn-success make_order">make orders</a>
+            </p>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="strin">Ordered_Movie </div>
+      <div class="order_container">
+        {{order_info}}
+      </div>
     </div>
   </div>
+</div>
 </div>
 
 {% endblock %}
