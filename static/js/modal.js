@@ -21,6 +21,19 @@ function second_cancel(){
 
 }
 
+function third_modal(order_id){
+  document.querySelector('body').style.overflow='hidden';
+  document.querySelector('.dimmed').style.display='block';
+  document.querySelector('.wrapper3').style.display='block';
+  document.getElementById('order_id').value=order_id;
+}
+
+function third_cancel(){
+  document.querySelector('body').style.overflow='auto';
+  document.querySelector('.dimmed').style.display='none';
+  document.querySelector('.wrapper3').style.display='none';
+}
+
 function post_account() {
   let account_num = $('#acc_num').val();
   let account_type = $('#acc_type').val();
@@ -33,6 +46,32 @@ function post_account() {
       'account_num': account_num,
       'account_type': account_type,
       'account_date': account_date
+    },
+    success: function (response) {
+      if (response['result'] == 'success') {
+        window.location.reload()
+      }
+    }
+  })
+}
+
+function post_rating() {
+  let rating=0;
+  let order_id=document.getElementById('order_id').value;
+  console.log(document.getElementById('order_id').value);
+  if($('#star5').is(':checked')) rating=5;
+  else if($('#star4').is(':checked')) rating=4;
+  else if($('#star3').is(':checked')) rating=3;
+  else if($('#star2').is(':checked')) rating=2;
+  else if($('#star1').is(':checked')) rating=1;
+  else rating=0;
+
+  $.ajax({
+    type: "GET",
+    url: "/returnmovie",
+    data: {
+      'oid': order_id,
+      'ostar': rating
     },
     success: function (response) {
       if (response['result'] == 'success') {

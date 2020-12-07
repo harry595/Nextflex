@@ -138,6 +138,25 @@
     box-shadow:dimgray 0 0 10px; 
     text-align: center;
   }
+  .wrapper3 { 
+    display: none;
+    position: fixed;
+    z-index: 4;
+    left:50%;
+    top:50%;
+    margin-left:-200px;
+    margin-top:-120px; /* 이거 js에서 동적으로 변경하자*/
+    font-size:20px;
+    
+  }
+  .modal3 { 
+    background-color: white; 
+    width: 400px; 
+    padding: 10px; 
+    box-shadow:dimgray 0 0 10px; 
+    text-align: center;
+  }
+
   label{
     float: left;
   }
@@ -183,6 +202,44 @@
   #plan_month{
     width: 50px;
   }
+  .rate {
+    height: 46px;
+    padding: 0 10px;
+  }
+  .rate:not(:checked) > .starrate>input {
+      position:absolute;
+      top:-9999px;
+  }
+  .rate:not(:checked) > .starrate>label {
+      float:right;
+      width:1em;
+      overflow:hidden;
+      white-space:nowrap;
+      cursor:pointer;
+      font-size:30px;
+      color:#ccc;
+  }
+  .rate:not(:checked) >.starrate> label:before {
+      content: '★ ';
+  }
+  .rate >.starrate> input:checked ~ label {
+      color: #ffc700;    
+  }
+  .rate:not(:checked) >.starrate> label:hover,
+  .rate:not(:checked) >.starrate> label:hover ~ label {
+      color: #deb217;  
+  }
+  .rate >.starrate> input:checked + label:hover,
+  .rate >.starrate> input:checked + label:hover ~ label,
+  .rate >.starrate> input:checked ~ label:hover,
+  .rate >.starrate> input:checked ~ label:hover ~ label,
+  .rate >.starrate> label:hover ~ input:checked ~ label {
+      color: #c59b08;
+  }
+  .starrate{
+    margin-right: 105px;
+  }
+
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Add your site or app content here -->
@@ -210,6 +267,7 @@
 
       <div class="cover">
         <div class="dimmed"></div>
+        <!-- first modal (accountnum,type) -->
         <div class="wrapper">
           <div class="modal">
             <h1> Append Account </h1>
@@ -230,6 +288,7 @@
             </footer>
           </div>
         </div>
+        <!-- second modal (month num) -->
         <div class="wrapper2">
           <div class="modal2">
             <h2> Confirm message</h2>
@@ -240,6 +299,35 @@
             </footer>
           </div>
         </div>
+
+        <!-- third modal (return star) -->
+        <div class="wrapper3">
+          <div class="modal3">
+            <h2> Movie Rating</h2>
+            <p style="margin-top:10px;">How was the movie?</p>
+            <footer>
+              <div class="rate">
+                <p class="starrate">
+                <input type="radio" id="star5" name="rate" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rate" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" name="rate" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" name="rate" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" name="rate" value="1" />
+                <label for="star1" title="text">1 star</label>
+                </p>
+              </div>
+              <br>
+              <button onclick="post_rating();">OK</button>
+              <button onclick="third_cancel();">Cancel</button>
+              <input type="hidden" value="" id="order_id">
+            </footer>
+          </div>
+        </div>
+
       </div>
       
       <div class="strin">Movie_Queue </div>
@@ -276,7 +364,7 @@
                 <span style ="width:{{orde[11]*20}}%"></span>
               </span>
               <a href="/viewmovie?oid={{orde[0]}}" class="btn btn-danger make_order">Watch Movie</a>
-              <a onclick="return confirm('Are you sure to return movie?');"  href="/viewmovie?oid={{orde[0]}}" class="btn btn-warning make_order">Return</a>
+              <a onclick="third_modal('{{orde[0]}}');"  class="btn btn-warning make_order">Return</a>
             </p>
           </div>
           {% endfor %}
