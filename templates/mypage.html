@@ -93,7 +93,98 @@
     float: inherit;
     margin: 0 0 -2px 0;
   }
+  .dimmed { 
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0,0,0,0.5);
+    top:0;
+    left:0;
+    z-index:1;
+  }
+  .wrapper { 
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    margin-left: -300px;
+    margin-top: -206.5px;
+    
+  }
+  .modal { 
+    background-color: white; 
+    width: 600px; 
+    padding: 10px; 
+    box-shadow:dimgray 0 0 10px; 
+    text-align: center;
+  }
+  
+  .wrapper2 { 
+    display: none;
+    position: fixed;
+    z-index: 4;
+    left:50%;
+    top:50%;
+    margin-left:-200px;
+    margin-top:-102.25px; /* 이거 js에서 동적으로 변경하자*/
+    
+  }
+  .modal2 { 
+    background-color: white; 
+    width: 400px; 
+    padding: 10px; 
+    box-shadow:dimgray 0 0 10px; 
+    text-align: center;
+  }
+  label{
+    float: left;
+  }
+  .acc_input{
+    margin-bottom:20px;
+  }
+  .modal>footer{
+    margin-top:20px;
+  }
+  .modal>footer>button{
+    margin:20px;
+    width: 120px;
+    background-color: cornflowerblue;
+    color:black;
+    font-weight: bold;
+  }
+  .modal>footer>button:hover{
+    transition:1s;
+    background: linear-gradient(-45deg, #ff8d6e, #ff6363, #ff3e3e, #ff0000);
+    color:rgb(255, 255, 255);
+  }
+
+  .modal2>footer>button{
+    margin:20px;
+    width: 120px;
+    background-color: white;
+    color:black;
+    font-weight: bold;
+  }
+  .modal2>footer>button:hover{
+    transition:1s;
+    background: linear-gradient(-45deg, #e4ecff, #e0f5ff, #eaecff, #e8e8ff);
+    color:black;
+  }
+  input{
+    width:338px;
+    margin-left:10px;
+  }
+  select{
+    width:338px;
+    margin-left:50px;
+  }
+  #plan_month{
+    width: 50px;
+  }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Add your site or app content here -->
 <div class="section-container" style="margin-top:100px;">
   <div class="container" style="margin-bottom:200px">
@@ -101,7 +192,7 @@
     <div class="con_body">
     <div class="cname"><span class="strin">Hello </span>{{user_info[2]}},{{user_info[3]}} ( <i class="fa fa-envelope"></i> : {{user_info[4]}} )</div>
     <div class="cname">
-      <div class="strin">Account_Info </div>
+       <span class="strin">Account_Info </span>
       {% if account_info == () %}
       <div style="margin-top:30px;">Empty, Create Your Own Account!</div>
       {% else %}
@@ -114,7 +205,42 @@
           </div>
         {% endfor %}
       {% endif %}
-      <a href="#" type="button" class="btn btn-success" id="create_acc">+ Create Account</a>
+
+      <button onclick="first_modal();" type="button" class="btn btn-success" id="create_acc">+ Create Account</button>
+
+      <div class="cover">
+        <div class="dimmed"></div>
+        <div class="wrapper">
+          <div class="modal">
+            <h1> Append Account </h1>
+            <div class="acc_input">
+              <label for="acc_num" minlength="6">Account_number: </label>
+              <input type="text" name="acc_num" id="acc_num">
+            </div>
+            <div class="acc_input">
+              <label for="acc_type">Account_type: </label>
+              <select value="acc_type" id="acc_type">
+                <option value="Limited Plan">limited plan</option>
+                <option value="Unlimited Plan">Unlimited plan</option>
+              </select>
+            </div>
+            <footer>
+              <button onclick="second_modal();">OK</button>
+              <button onclick="first_cancel();">Cancel</button>
+            </footer>
+          </div>
+        </div>
+        <div class="wrapper2">
+          <div class="modal2">
+            <h2> Confirm message</h2>
+            <p style="margin-top:10px;">Buy <input type="number" value="1" min="1" id="plan_month" name="plan_month" /> months plan</p>
+            <footer>
+              <button onclick="post_account();">OK</button>
+              <button onclick="second_cancel();">Cancel</button>
+            </footer>
+          </div>
+        </div>
+      </div>
       
       <div class="strin">Movie_Queue </div>
       <div class="queue_container">
@@ -129,7 +255,7 @@
               <span class='star-rating'> 
                 <span style ="width:{{queue[8]*20}}%"></span>
               </span>
-              <a href="/makeorders?qid={{queue[0]}}" class="btn btn-success make_order">make orders</a>
+              <a onclick="return confirm('Would you like to order {{queue[4]}}?');"  href="/makeorders?qid={{queue[0]}}" class="btn btn-success make_order">make orders</a>
             </p>
           </div>
           {% endfor %}
@@ -150,6 +276,7 @@
                 <span style ="width:{{orde[11]*20}}%"></span>
               </span>
               <a href="/viewmovie?oid={{orde[0]}}" class="btn btn-danger make_order">Watch Movie</a>
+              <a onclick="return confirm('Are you sure to return movie?');"  href="/viewmovie?oid={{orde[0]}}" class="btn btn-warning make_order">Return</a>
             </p>
           </div>
           {% endfor %}

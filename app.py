@@ -21,6 +21,18 @@ def movie_queue(movie_id):
     db.commit()
     return redirect('/movies')
     
+@app.route('/post_account', methods=['POST'])
+def post_account():
+    user_id=session['user']
+    account_num = request.form['account_num']
+    account_type = request.form['account_type']
+    account_date = request.form['account_date']
+    print(user_id,account_num,account_type,account_date)
+    sql = "INSERT INTO account(CustomerID,AccountNum,AccountType,PlanExpiredDate) VALUES (%s,%s,%s,DATE_ADD(NOW(), INTERVAL %s month));"
+    cursor.execute(sql,(user_id,account_num,account_type,account_date))
+    db.commit()
+    return jsonify({'result': 'success'})
+
 @app.route('/viewmovie')
 def viewmovie():
   user_id=session['user']

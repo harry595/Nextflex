@@ -18,9 +18,8 @@
 </style>
 <div class="section-container" >
   <div class="container" style="margin-bottom:200px">
-    <h1 class="movie_title" style="background-image: {{ url_for('static', filename=movie_info[6]) }};">{{movie_info[1]}}</h1>
-  <iframe class="vmovie" width="100%" height="600px;" src="https://www.youtube.com/embed/LFoz8ZJWmPs" frameborder="0" allowfullscreen></iframe>
+    <h1 class="movie_title">{{movie_info[1]}}</h1>
+  <iframe class="vmovie" width="100%" height="600px;" src={{movie_info[8]}} frameborder="0" allowfullscreen></iframe>
   </div>
 </div>
-
   {% endblock %}
