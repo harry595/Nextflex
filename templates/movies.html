@@ -33,6 +33,9 @@
   p{
     text-align: justify;
   }
+  #recommends{
+    background-image: url(../static/images/recommend1.jpg);
+  }
 </style>
 <div class="section-container">
     {% if error %}
@@ -50,6 +53,20 @@
         <input type="submit" value="검색" class="btn btn-success">
       </form>
       <br>
+      {% if recommend_movie != None %}
+          <div class="row" id="recommends" style="margin-top:30px; background-color: aliceblue; padding:10px 0 10px 0; margin-right: 80px;">
+            <div class="col-xs-12 col-md-12">
+              <img class="img-responsive reveal-content" src="{{ url_for('static', filename=recommend_movie[6]) }}" alt="" data-action="zoom" style="width:150px; display: inline; float: left; margin-right: 30px;">
+              <a onclick="return confirm('Would you like to put {{recommend_movie[1]}} in your movie queue?');" href="/movie_queue/{{recommend_movie[0]}}"><h3 class="text-left" style="color: aliceblue;">Recommend Movie: {{recommend_movie[1]}}</h3></a>
+              <div class='star-rating'> 
+                  <span style ="width:{{recommend_movie[5]*20}}%"></span>
+              </div>
+              <p>{{recommend_movie[7]}}</p>
+           </div>
+          </div> 
+      {% endif %}  
+
+      {% set counter = 0 %}
       {% if movies == None %}
         <h1 style="margin-top:200px;color:black"> The movie you are looking for<br>does not exist.</h1>
       {% else %}
@@ -57,7 +74,7 @@
           <div class="row" style="margin-top:30px;">
             <div class="col-xs-12 col-md-11">
               <img class="img-responsive reveal-content" src="{{ url_for('static', filename=movie[6]) }}" alt="" data-action="zoom" style="width:150px; display: inline; float: left; margin-right: 30px;">
-              <a onclick="return confirm('Would you like to put {{movie[1]}} in your movie queue?');" href="/movie_queue/{{movie[0]}}"><h3 class="text-left">{{ loop.index }}. {{movie[1]}}</h3></a>
+              <a onclick="return confirm('Would you like to put {{movie[1]}} in your movie queue?');" href="/movie_queue/{{movie[0]}}"><h3 class="text-left">{{loop.index}}. {{movie[1]}}</h3></a>
               <div class='star-rating'> 
                   <span style ="width:{{movie[5]*20}}%"></span>
               </div>

@@ -4,7 +4,7 @@ import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '12rf1124g341h13'
-db = pymysql.connect(host='localhost', port=33061, user='root',passwd='*****',db='nextflexdb',charset='utf8')
+db = pymysql.connect(host='localhost', port=33061, user='root',passwd='***',db='nextflexdb',charset='utf8')
 cursor=db.cursor()
 
  
@@ -45,7 +45,7 @@ def returnmovie():
     sql2 = "SELECT MovieID FROM Orders WHERE OrderID=%s"
     cursor.execute(sql2,orderid)
     orderedmovie=cursor.fetchone()
-    sql3 = "UPDATE nextflexdb.movie SET MovieRating= (SELECT AVG(Rating) FROM orders WHERE MovieID=%s) WHERE MovieID=%s"
+    sql3 = "UPDATE Movie SET MovieRating= (SELECT AVG(Rating) FROM orders WHERE MovieID=%s) WHERE MovieID=%s"
     cursor.execute(sql3,(orderedmovie,orderedmovie))
     db.commit()
     return jsonify({'result': 'success'})
@@ -54,9 +54,12 @@ def returnmovie():
 def viewmovie():
   user_id=session['user']
   orderid=request.args.get('oid')
+
   sql = "SELECT * FROM Orders WHERE OrderID=%s and CustomerID=%s and holding=1"
   cursor.execute(sql,(orderid,user_id))
   ordercheck=cursor.fetchone()
+  if(ordercheck is None):
+    return redirect('/mypage')
 
   sql2 = "SELECT * FROM movie WHERE MovieID=%s"
   cursor.execute(sql2,ordercheck[2])
@@ -110,6 +113,19 @@ def makeorders():
 def movies():
   rtype=request.args.get('search_type')
   ktype=request.args.get('keywords')
+  user_id=session['user']
+  sql_recommend='''SELECT * FROM Movie 
+                    WHERE MovieType=(
+                        SELECT MovieType 
+                        FROM movie left join orders on orders.MovieID=movie.MovieID 
+                        WHERE CustomerID=%s 
+                        GROUP BY MovieType 
+                        order by -COUNT(*) 
+                        limit 1) 
+                    order by -MovieRating limit 1;'''
+  rows_count = cursor.execute(sql_recommend,user_id)
+  recommend_movie = cursor.fetchone()
+
   if(ktype == ''):
     sql = "SELECT * FROM movie"
     rows_count = cursor.execute(sql)
@@ -117,7 +133,7 @@ def movies():
         movie_info = cursor.fetchall()
     else:
         movie_info=None
-    return render_template('movies.html',movies=movie_info)
+    return render_template('movies.html',movies=movie_info,recommend_movie=recommend_movie)
   else:
       if(rtype=="movie"):
         sql = "SELECT * FROM movie WHERE MovieName LIKE %s"
@@ -126,7 +142,7 @@ def movies():
             movie_info = cursor.fetchall()
         else:
             movie_info=None
-        return render_template('movies.html',movies=movie_info)
+        return render_template('movies.html',movies=movie_info,recommend_movie=None)
       elif(rtype=="actor"):
         #두명 이상 검색
         if("," in ktype):
@@ -138,14 +154,14 @@ def movies():
                 movie_info = cursor.fetchall()
             else:
                 movie_info=None
-            return render_template('movies.html',movies=movie_info)
+            return render_template('movies.html',movies=movie_info,recommend_movie=None)
         sql = "SELECT * FROM movie left JOIN movieinfo_actor ON movie.MovieID = movieinfo_actor.Movie_info_ID left JOIN actor ON actor.ActorID = movieinfo_actor.Actor_info_ID WHERE ActorName LIKE %s;"
         rows_count = cursor.execute(sql,(('%' + ktype + '%',)))
         if rows_count > 0 :
             movie_info = cursor.fetchall()
         else:
             movie_info=None
-        return render_template('movies.html',movies=movie_info)
+        return render_template('movies.html',movies=movie_info,recommend_movie=None)
       elif(rtype=="movie_type"):
         sql = "SELECT * FROM MOVIE WHERE MovieType= %s"
         rows_count = cursor.execute(sql,ktype)
@@ -153,7 +169,7 @@ def movies():
             movie_info = cursor.fetchall()
         else:
             movie_info=None
-        return render_template('movies.html',movies=movie_info)
+        return render_template('movies.html',movies=movie_info,recommend_movie=None)
       else:
         sql = "SELECT * FROM movie"
         rows_count = cursor.execute(sql)
@@ -161,7 +177,7 @@ def movies():
             movie_info = cursor.fetchall()
         else:
             movie_info=None
-        return render_template('movies.html',movies=movie_info)
+        return render_template('movies.html',movies=movie_info,recommend_movie=recommend_movie)
 
     
 
